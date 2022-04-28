@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+*.out
+resnet/fashionmnist
+resnet/lightnet18
+resnet/lightning_logs
+resnet/resnet18_dropout
+resnet/book
