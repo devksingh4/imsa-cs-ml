@@ -135,3 +135,6 @@ resnet/lightnet18
 resnet/lightning_logs
 resnet/resnet18_dropout
 resnet/book
+fashionmnist/
+image-generator/horse-or-human
+image-generator/horse-or-human.zip
