@@ -138,3 +138,5 @@ resnet/book
 fashionmnist/
 image-generator/horse-or-human
 image-generator/horse-or-human.zip
+xrays/weights/**
+xrays/lightning_logs/**

@@ -5,4 +5,4 @@
 #SBATCH --nodes 1
 
 source activate base
-python resnet18.py
+python train.py

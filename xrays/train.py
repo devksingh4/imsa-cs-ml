@@ -23,7 +23,9 @@ class RSNASet(Dataset):
                 except:
                     labels[fn] = [int(rows[1])]
         for fn in labels.keys():
-            labels[fn].pop(5)
+            # "any" should really be the classification "none"
+            # so, it should only be 1 if nothing else is true - swap the values
+            labels[fn][5] = abs(labels[fn][5]-1)
         self.labels = labels
         self.files = list(labels.keys())
     def __len__(self):
@@ -44,11 +46,12 @@ class RSNASet(Dataset):
         return img, label
 
 # %%
-BATCH_SIZE = 8
+BATCH_SIZE = 128
 trainset = RSNASet(csv_path=csv_path, root_dir=items)
+model = 'resnet18'
 trainloader = torch.utils.data.DataLoader(trainset,batch_size=BATCH_SIZE,shuffle=True,num_workers=4)
-classes = ('epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural')
-model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=False, num_classes=len(classes))
+classes = ('epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural','none')
+model = torch.hub.load('pytorch/vision:v0.10.0', model, pretrained=False, num_classes=len(classes))
 if torch.cuda.is_available():
     print("CUDA is available - using CUDA!")
     model = model.cuda()
@@ -58,8 +61,9 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # %%
+
 from tqdm import tqdm
-for epoch in range(5):  # loop over the dataset multiple times
+for epoch in range(15):  # loop over the dataset multiple times
     running_loss = 0.0
     batch = 0
     with tqdm(trainloader, unit="batch") as tepoch:
@@ -86,9 +90,9 @@ for epoch in range(5):  # loop over the dataset multiple times
                 running_loss = 0.0
             batch += 1
 
-    print('Saving model at epoch {}'.format(epoch))
-    torch.save(model.state_dict(), "weights/resnet18/epoch{}.pth".format(epoch))
-    print('Saved model at epoch {}!'.format(epoch))
+    print('Saving model at epoch {}'.format(epoch + 1))
+    torch.save(model.state_dict(), "weights/resnet18/epoch{}.pth".format(epoch + 1))
+    print('Saved model at epoch {}!'.format(epoch + 1))
 print('Finished training!')
 
 
