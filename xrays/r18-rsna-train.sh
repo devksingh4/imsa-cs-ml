@@ -5,4 +5,4 @@
 #SBATCH --nodes 1
 
 source activate base
-python train.py
+ipython -c "%run train.ipynb"
